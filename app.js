@@ -23,8 +23,8 @@ app.use((req, res, next)=> {
 })
 
 // Routers
-let index = require('./router/index');
-let userRouter = require('./router/userRouter');
+let index = require('./app/router/index');
+let userRouter = require('./app/router/userRouter');
 app.use('/', index);
 app.use('/user', userRouter);
 

@@ -21,6 +21,10 @@ var userData=Schema({
     lastLoginTime: {
         type: String,
         default: ""
+    },
+    emailVerfied: {
+        type: Boolean,
+        default: false
     }
 })
 
