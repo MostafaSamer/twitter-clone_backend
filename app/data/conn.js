@@ -1,10 +1,10 @@
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost/twitter', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify:false
 })
 
-module.exports = {
-    mongoose: mongoose
-}
+module.exports = mongoose

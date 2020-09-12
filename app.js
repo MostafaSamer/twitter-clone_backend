@@ -1,13 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const cors = require('cors');
 
 const app = express();
 
+// Connect DB
+require('./app/data/conn')
+
 // POST REQ
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json())
+
 
 // Access Api
 app.use(cors({

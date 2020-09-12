@@ -1,7 +1,7 @@
-var userModule = require('../data/userModule').userModule
+var userModule = require('../data/userModule')
 const md5 = require('md5')
 
-exports.userLogin = async(req, res)=> {
+exports.userLogin = async (req, res)=> {
     try {
         let data = req.body.data;
         let userSearch = await userModule.findOne({email: data.email})
@@ -16,19 +16,36 @@ exports.userLogin = async(req, res)=> {
         })
         res.status(200).json({success: 1, data: userSearch, msg: "Login Succesfull"})
     } catch (error) {
-        res.status(500).json({success: 0, msg: error})
+        res.status(500).send({success: 0, msg: error})
     }
 }
 
-exports.userLogout = async(req, res)=> {
+exports.getData = async(req, res)=> {
     try {
-        res.status(200).json({success: 1, data: emailSearch, msg: "Logout Succesfull"})
+        let id = req.body.data.id;
+        let user = await userModule.findOne({_id: id});
+        if(!user) {
+            res.status(200).json({success: 0, msg: "Not Found!"})
+            return;
+        }
+        res.status(200).json({success: 1, data: user, msg: "User Found!"})
     } catch (error) {
-        res.status(500).json({success: 0, msg: error})
+        res.status(500).send({success: 0, msg: error})
     }
 }
 
-exports.userRegister = async(req, res)=> {
+exports.userLogout = async (req, res)=> {
+    try {
+        console.log(req.body);
+        req.user.tokens = req.user.tokens.forEach( (token)=> token.token !== req.token )
+        await req.user.save()
+        res.status(200).send({success: 1, data: '', msg: "Logout Succesfull"})
+    } catch (error) {
+        res.status(500).send({success: 0, msg: error})
+    }
+}
+
+exports.userRegister = async (req, res)=>{
     try {
         let data = req.body.data
         let emailSearch = await userModule.findOne({email: data.email})
@@ -40,6 +57,6 @@ exports.userRegister = async(req, res)=> {
         let userData = await new userModule(data).save();
         res.status(200).json({success: 1, data: userData, msg: "Register Succesfull"})
     } catch (error) {
-        res.status(500).json({success: 0, msg: error})
+        res.status(500).send({success: 0, msg: error})
     }
 }

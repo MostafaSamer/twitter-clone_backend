@@ -1,18 +1,26 @@
-let mongoose = require('./conn').mongoose
+const mongoose = require('mongoose')
+const check = require('express-validator').check
+const bcrypt = require('bcryptjs')
+const JWT = require('jsonwebtoken')
+const tweetModel = require('./tweetsModule')
 
-var Schema=mongoose.Schema;
-var userData=Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        default: ""
+        required: true,
+        trim: true
     },
     email: {
         type: String,
-        default: ""
+        required: true,
+        trim: true,
+        unique: true
     },
     pass: {
         type: String,
-        default: ""
+        required: true,
+        trim: true,
+        minlength: 8
     },
     LoginDevice: {
         type: String,
@@ -25,11 +33,23 @@ var userData=Schema({
     emailVerfied: {
         type: Boolean,
         default: false
-    }
+    },
+    follwers: [{
+        follwer: {
+            type: mongoose.Schema.Types.ObjectId
+        }
+    }],
+    follwing: [{
+        follwer: {
+            type: mongoose.Schema.Types.ObjectId
+        }
+    }],
+},{
+    timestamps: true
 })
 
-var userModule=mongoose.model('userMaster',userData);
+userSchema.index({name: 'text', '/name/': 'text'});
 
-module.exports = {
-    userModule: userModule
-}
+const userModule = mongoose.model('userMaster',userSchema);
+
+module.exports = userModule
